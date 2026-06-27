@@ -1,0 +1,166 @@
+@if (isLoading()) {
+  <app-loading-spinner></app-loading-spinner>
+}
+
+@if (doctor()) {
+  <section class="booking-section">
+    <div class="container">
+
+      <!-- Back -->
+      <a [routerLink]="['/doctors', doctor()!.id]"
+         class="back-btn mb-4 d-inline-flex align-items-center gap-2">
+        <i class="fas fa-arrow-left"></i> Back to Doctor Profile
+      </a>
+
+      <div class="row g-4">
+
+        <!-- Left: Doctor Summary -->
+        <div class="col-lg-4">
+          <div class="doctor-summary-card">
+            <div class="doctor-summary-avatar">
+              <i class="fas fa-user-md"></i>
+            </div>
+            <span class="badge-specialty mb-2">{{ doctor()!.specialtyName }}</span>
+            <h4 class="doctor-summary-name">
+              {{ doctor()!.title }} {{ doctor()!.fullName }}
+            </h4>
+            <div class="doctor-summary-meta">
+              <div class="meta-item">
+                <i class="fas fa-briefcase-medical text-primary"></i>
+                <span>{{ doctor()!.experienceYears }} Years Exp</span>
+              </div>
+              <div class="meta-item">
+                <i class="fas fa-star text-warning"></i>
+                <span>{{ doctor()!.rating }} Rating</span>
+              </div>
+              @if (doctor()!.clinicAddress) {
+                <div class="meta-item">
+                  <i class="fas fa-map-marker-alt text-primary"></i>
+                  <span>{{ doctor()!.clinicAddress }}</span>
+                </div>
+              }
+            </div>
+            <div class="fee-box">
+              <p class="fee-label">Consultation Fee</p>
+              <h3 class="fee-amount">EGP {{ doctor()!.consultationFee }}</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Booking Form -->
+        <div class="col-lg-8">
+          <div class="booking-form-card">
+            <h4 class="booking-form-title">
+              <i class="fas fa-calendar-plus me-2 text-primary"></i>
+              Book Your Appointment
+            </h4>
+
+            <!-- Alerts -->
+            @if (successMessage()) {
+              <div class="alert-success-custom mb-3">
+                <i class="fas fa-check-circle me-2"></i>
+                {{ successMessage() }}
+                <p class="mb-0 mt-1" style="font-size:0.82rem;">Redirecting to your appointments...</p>
+              </div>
+            }
+            @if (errorMessage()) {
+              <div class="alert-error-custom mb-3">
+                <i class="fas fa-times-circle me-2"></i>
+                {{ errorMessage() }}
+              </div>
+            }
+
+            <form [formGroup]="bookingForm">
+
+              <!-- Date -->
+              <div class="mb-4">
+                <label class="form-label fw-600">
+                  <i class="fas fa-calendar me-2 text-primary"></i>
+                  Select Date
+                </label>
+                <input type="date"
+                       class="form-control custom-input"
+                       formControlName="appointmentDate"
+                       [min]="minDate"
+                       (change)="onDateChange()">
+                @if (bookingForm.controls['appointmentDate'].invalid &&
+                     bookingForm.controls['appointmentDate'].touched) {
+                  <p class="error-msg">
+                    <i class="fas fa-exclamation-circle me-1"></i>
+                    Please select a date
+                  </p>
+                }
+              </div>
+
+              <!-- Time Slots -->
+              @if (bookingForm.value.appointmentDate) {
+                <div class="mb-4">
+                  <label class="form-label fw-600">
+                    <i class="fas fa-clock me-2 text-primary"></i>
+                    Available Time Slots
+                  </label>
+
+                  @if (isLoadingSlots()) {
+                    <div class="slots-loading">
+                      <span class="spinner-border spinner-border-sm text-primary me-2"></span>
+                      Loading available slots...
+                    </div>
+                  }
+
+                  @if (!isLoadingSlots() && availableSlots().length > 0) {
+                    <div class="slots-grid">
+                      @for (slot of availableSlots(); track slot) {
+                        <button type="button"
+                                class="slot-btn"
+                                [class.selected]="selectedSlot() === slot"
+                                (click)="selectSlot(slot)">
+                          <i class="fas fa-clock me-1"></i>
+                          {{ slot }}
+                        </button>
+                      }
+                    </div>
+                  }
+
+                  @if (!isLoadingSlots() && availableSlots().length === 0) {
+                    <div class="no-slots">
+                      <i class="fas fa-calendar-times me-2"></i>
+                      No available slots for this date. Please choose another date.
+                    </div>
+                  }
+                </div>
+              }
+
+              <!-- Notes -->
+              <div class="mb-4">
+                <label class="form-label fw-600">
+                  <i class="fas fa-sticky-note me-2 text-primary"></i>
+                  Notes (Optional)
+                </label>
+                <textarea class="form-control custom-textarea"
+                          formControlName="notes"
+                          rows="3"
+                          placeholder="Describe your symptoms or any important information for the doctor..."></textarea>
+              </div>
+
+              <!-- Submit -->
+              <button type="button"
+                      class="btn btn-primary w-100 btn-book-submit rounded-3"
+                      [disabled]="!selectedSlot() || isBooking()"
+                      (click)="book()">
+                @if (isBooking()) {
+                  <span class="spinner-border spinner-border-sm me-2"></span>
+                  Booking...
+                } @else {
+                  <i class="fas fa-calendar-check me-2"></i>
+                  Confirm Appointment
+                }
+              </button>
+
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+}

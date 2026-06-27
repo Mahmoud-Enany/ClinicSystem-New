@@ -1,0 +1,157 @@
+<nav class="navbar navbar-expand-lg sticky-top" style="background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); box-shadow: 0 2px 20px rgba(0,0,0,0.08);">
+  <div class="container">
+
+    <!-- Brand -->
+    <a class="navbar-brand d-flex align-items-center gap-2" routerLink="/home">
+      <div style="width:38px; height:38px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius:10px; display:flex; align-items:center; justify-content:center;">
+        <i class="fas fa-heartbeat text-white" style="font-size:1.1rem;"></i>
+      </div>
+      <span style="font-weight:700; font-size:1.2rem; color:var(--dark);">Clinic<span style="color:var(--primary);">System</span></span>
+    </a>
+
+    <!-- Toggler -->
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mx-auto gap-1">
+
+        <li class="nav-item">
+          <a class="nav-link px-3 py-2 rounded-3 fw-500"
+             routerLink="/home"
+             routerLinkActive="active-link">
+            <i class="fas fa-home me-1"></i> Home
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link px-3 py-2 rounded-3"
+             routerLink="/doctors"
+             routerLinkActive="active-link">
+            <i class="fas fa-user-md me-1"></i> Doctors
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link px-3 py-2 rounded-3"
+             routerLink="/about"
+             routerLinkActive="active-link">
+            <i class="fas fa-info-circle me-1"></i> About
+          </a>
+        </li>
+
+        <!-- Patient Links -->
+        @if (authService.isLoggedIn() && authService.role() === 'Patient') {
+          <li class="nav-item">
+            <a class="nav-link px-3 py-2 rounded-3"
+               routerLink="/patient/appointments"
+               routerLinkActive="active-link">
+              <i class="fas fa-calendar-check me-1"></i> My Appointments
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link px-3 py-2 rounded-3"
+               routerLink="/patient/records"
+               routerLinkActive="active-link">
+              <i class="fas fa-file-medical me-1"></i> My Records
+            </a>
+          </li>
+        }
+
+        <!-- Doctor Links -->
+        @if (authService.isLoggedIn() && authService.role() === 'Doctor') {
+          <li class="nav-item">
+            <a class="nav-link px-3 py-2 rounded-3"
+               routerLink="/doctor/appointments"
+               routerLinkActive="active-link">
+              <i class="fas fa-calendar-alt me-1"></i> Appointments
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link px-3 py-2 rounded-3"
+               routerLink="/doctor/schedule"
+               routerLinkActive="active-link">
+              <i class="fas fa-clock me-1"></i> Schedule
+            </a>
+          </li>
+        }
+
+        <!-- Admin Links -->
+        @if (authService.isLoggedIn() && authService.role() === 'Admin') {
+          <li class="nav-item">
+            <a class="nav-link px-3 py-2 rounded-3"
+               routerLink="/admin/dashboard"
+               routerLinkActive="active-link">
+              <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+            </a>
+          </li>
+        }
+
+      </ul>
+
+      <!-- Right Side -->
+      <div class="d-flex align-items-center gap-2">
+
+        @if (!authService.isLoggedIn()) {
+          <a routerLink="/login"
+             class="btn btn-outline-primary btn-sm px-3 rounded-3">
+            <i class="fas fa-sign-in-alt me-1"></i> Login
+          </a>
+          <a routerLink="/register"
+             class="btn btn-primary btn-sm px-3 rounded-3">
+            <i class="fas fa-user-plus me-1"></i> Register
+          </a>
+        }
+
+        @if (authService.isLoggedIn()) {
+          <!-- User Dropdown -->
+          <div class="dropdown">
+            <button class="btn btn-light btn-sm px-3 rounded-3 dropdown-toggle d-flex align-items-center gap-2"
+                    type="button"
+                    data-bs-toggle="dropdown">
+              <div style="width:28px; height:28px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                <i class="fas fa-user text-white" style="font-size:0.7rem;"></i>
+              </div>
+              <span class="fw-600" style="font-size:0.9rem;">{{ authService.fullName() }}</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 mt-2">
+
+              @if (authService.role() === 'Patient') {
+                <li>
+                  <a class="dropdown-item py-2" routerLink="/patient/profile">
+                    <i class="fas fa-user-circle me-2 text-primary"></i> My Profile
+                  </a>
+                </li>
+              }
+
+              @if (authService.role() === 'Doctor') {
+                <li>
+                  <a class="dropdown-item py-2" routerLink="/doctor/profile">
+                    <i class="fas fa-user-md me-2 text-primary"></i> My Profile
+                  </a>
+                </li>
+              }
+
+              @if (authService.role() === 'Admin') {
+                <li>
+                  <a class="dropdown-item py-2" routerLink="/admin/dashboard">
+                    <i class="fas fa-tachometer-alt me-2 text-primary"></i> Dashboard
+                  </a>
+                </li>
+              }
+
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <button class="dropdown-item py-2 text-danger" (click)="logout()">
+                  <i class="fas fa-sign-out-alt me-2"></i> Logout
+                </button>
+              </li>
+            </ul>
+          </div>
+        }
+
+      </div>
+    </div>
+  </div>
+</nav>

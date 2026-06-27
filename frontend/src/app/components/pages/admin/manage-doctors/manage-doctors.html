@@ -1,0 +1,121 @@
+@if (isLoading()) {
+  <app-loading-spinner></app-loading-spinner>
+}
+
+<section class="admin-section">
+  <div class="container">
+
+    <!-- Header -->
+    <div class="page-header-inner mb-4">
+      <div>
+        <h2 class="page-title-inner">Manage Doctors</h2>
+        <p class="page-subtitle-inner">View and manage all registered doctors</p>
+      </div>
+      <div class="total-badge">
+        <i class="fas fa-user-md me-2"></i>
+        {{ filteredDoctors().length }} Doctors
+      </div>
+    </div>
+
+    <!-- Alert -->
+    @if (successMessage()) {
+      <div class="alert-success-custom mb-3">
+        <i class="fas fa-check-circle me-2"></i>{{ successMessage() }}
+      </div>
+    }
+
+    <!-- Search -->
+    <div class="search-box mb-4">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text"
+             class="search-input"
+             placeholder="Search by name, specialty or email..."
+             [formControl]="searchControl">
+    </div>
+
+    <!-- Table -->
+    <div class="table-card">
+      <div class="table-responsive">
+        <table class="table admin-table">
+          <thead>
+            <tr>
+              <th>Doctor</th>
+              <th>Specialty</th>
+              <th>Experience</th>
+              <th>Fee</th>
+              <th>Rating</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (doctor of filteredDoctors(); track doctor.id) {
+              <tr>
+                <td>
+                  <div class="doctor-cell">
+                    <div class="doctor-avatar-sm">
+                      <i class="fas fa-user-md"></i>
+                    </div>
+                    <div>
+                      <p class="doctor-name-sm">{{ doctor.title }} {{ doctor.fullName }}</p>
+                      <p class="doctor-email-sm">{{ doctor.email }}</p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge-specialty">{{ doctor.specialtyName }}</span>
+                </td>
+                <td>
+                  <span class="text-muted">{{ doctor.experienceYears }} yrs</span>
+                </td>
+                <td>
+                  <span class="fee-text">EGP {{ doctor.consultationFee | number }}</span>
+                </td>
+                <td>
+                  <div class="rating-cell">
+                    <i class="fas fa-star text-warning me-1"></i>
+                    <span>{{ doctor.rating | number:'1.1-1' }}</span>
+                    <small class="text-muted">({{ doctor.ratingCount }})</small>
+                  </div>
+                </td>
+                <td>
+                  @if (doctor.isAvailable) {
+                    <span class="status-badge available">
+                      <i class="fas fa-circle me-1"></i> Available
+                    </span>
+                  } @else {
+                    <span class="status-badge unavailable">
+                      <i class="fas fa-circle me-1"></i> Unavailable
+                    </span>
+                  }
+                </td>
+                <td>
+                  <button class="btn btn-sm rounded-3"
+                          [class]="doctor.isAvailable ? 'btn-outline-danger' : 'btn-outline-success'"
+                          (click)="toggleAvailability(doctor.id)"
+                          [disabled]="togglingId() === doctor.id">
+                    @if (togglingId() === doctor.id) {
+                      <span class="spinner-border spinner-border-sm"></span>
+                    } @else if (doctor.isAvailable) {
+                      <i class="fas fa-ban me-1"></i> Disable
+                    } @else {
+                      <i class="fas fa-check me-1"></i> Enable
+                    }
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+
+        @if (!isLoading() && filteredDoctors().length === 0) {
+          <div class="empty-state">
+            <i class="fas fa-user-md empty-icon"></i>
+            <h5>No doctors found</h5>
+          </div>
+        }
+      </div>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,160 @@
+@if (isLoading()) 
+{
+  <app-loading-spinner></app-loading-spinner>
+}
+
+<section class="appointments-section">
+  <div class="container">
+
+    <!-- Header -->
+    <div class="page-header-inner">
+      <div>
+        <h2 class="page-title-inner">My Appointments</h2>
+        <p class="page-subtitle-inner">Track and manage all your medical appointments</p>
+      </div>
+      <a routerLink="/doctors" class="btn btn-primary rounded-3">
+        <i class="fas fa-plus me-2"></i> Book New
+      </a>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs-container">
+      <button class="tab-btn" [class.active]="selectedTab() === 'all'" (click)="filterByTab('all')">
+        All <span class="tab-count">{{ getTabCount('all') }}</span>
+      </button>
+      <button class="tab-btn" [class.active]="selectedTab() === 'pending'" (click)="filterByTab('pending')">
+        Pending <span class="tab-count">{{ getTabCount('pending') }}</span>
+      </button>
+      <button class="tab-btn" [class.active]="selectedTab() === 'confirmed'" (click)="filterByTab('confirmed')">
+        Confirmed <span class="tab-count">{{ getTabCount('confirmed') }}</span>
+      </button>
+      <button class="tab-btn" [class.active]="selectedTab() === 'completed'" (click)="filterByTab('completed')">
+        Completed <span class="tab-count">{{ getTabCount('completed') }}</span>
+      </button>
+      <button class="tab-btn" [class.active]="selectedTab() === 'cancelled'" (click)="filterByTab('cancelled')">
+        Cancelled <span class="tab-count">{{ getTabCount('cancelled') }}</span>
+      </button>
+    </div>
+
+    <!-- Appointments List -->
+    <div class="appointments-list">
+      @for (appointment of filteredAppointments(); track appointment.id) 
+      {
+        <div class="appointment-card">
+
+          <!-- Left -->
+          <div class="appointment-date-box">
+            <span class="appointment-day">{{ appointment.appointmentDate | slice:8:10 }}</span>
+            <span class="appointment-month">{{ appointment.appointmentDate | slice:5:7 }}</span>
+            <span class="appointment-year">{{ appointment.appointmentDate | slice:0:4 }}</span>
+          </div>
+
+          <!-- Middle -->
+          <div class="appointment-info">
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <span [class]="'status-badge ' + getStatusClass(appointment.status)">
+                <i [class]="getStatusIcon(appointment.status) + ' me-1'"></i>
+                {{ appointment.status }}
+              </span>
+            </div>
+            <h5 class="appointment-doctor">{{ appointment.doctorName }}</h5>
+            <p class="appointment-specialty">
+              <i class="fas fa-stethoscope me-1 text-primary"></i>
+              {{ appointment.specialtyName }}
+            </p>
+            <div class="appointment-meta">
+              <span>
+                <i class="fas fa-clock me-1"></i>
+                {{ appointment.timeSlot }}
+              </span>
+              <span>
+                <i class="fas fa-money-bill me-1"></i>
+                EGP {{ appointment.consultationFee }}
+              </span>
+            </div>
+            @if (appointment.notes) {
+              <p class="appointment-notes">
+                <i class="fas fa-sticky-note me-1"></i>
+                {{ appointment.notes }}
+              </p>
+            }
+          </div>
+
+          <!-- Actions -->
+          <div class="appointment-actions">
+            @if (appointment.status === 'Pending' || appointment.status === 'Confirmed') {
+              <button class="btn btn-outline-danger btn-sm rounded-3"
+                      (click)="openCancelModal(appointment.id)"
+                      [disabled]="cancellingId() === appointment.id">
+                @if (cancellingId() === appointment.id) {
+                  <span class="spinner-border spinner-border-sm"></span>
+                } @else {
+                  <i class="fas fa-times me-1"></i> Cancel
+                }
+              </button>
+            }
+          </div>
+
+        </div>
+      }
+
+      @empty {
+        <div class="empty-state">
+          <i class="fas fa-calendar-times empty-icon"></i>
+          <h5>No appointments found</h5>
+          <p class="text-muted">You don't have any {{ selectedTab() === 'all' ? '' : selectedTab() }} appointments yet</p>
+          <a routerLink="/doctors" class="btn btn-primary rounded-3 mt-2">
+            <i class="fas fa-search me-2"></i> Find a Doctor
+          </a>
+        </div>
+      }
+    </div>
+
+  </div>
+</section>
+
+<!-- Cancel Modal -->
+@if (showCancelModal()) {
+  <div class="modal-overlay" (click)="closeCancelModal()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <div class="modal-header-custom">
+        <h5 class="modal-title-custom">
+          <i class="fas fa-times-circle text-danger me-2"></i>
+          Cancel Appointment
+        </h5>
+        <button class="modal-close" (click)="closeCancelModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body-custom">
+        <p class="text-muted mb-3">Please provide a reason for cancellation.</p>
+        <form [formGroup]="cancelForm">
+          <label class="form-label fw-600">Reason</label>
+          <textarea class="form-control custom-textarea"
+                    formControlName="reason"
+                    rows="3"
+                    placeholder="Enter cancellation reason..."></textarea>
+          @if (cancelForm.controls['reason'].invalid && cancelForm.controls['reason'].touched) {
+            <p class="error-msg">
+              <i class="fas fa-exclamation-circle me-1"></i>
+              Please enter a reason (min 5 characters)
+            </p>
+          }
+        </form>
+      </div>
+      <div class="modal-footer-custom">
+        <button class="btn btn-outline-secondary rounded-3" (click)="closeCancelModal()">
+          Keep Appointment
+        </button>
+        <button class="btn btn-danger rounded-3"
+                (click)="confirmCancel()"
+                [disabled]="cancellingId() !== null">
+          @if (cancellingId() !== null) {
+            <span class="spinner-border spinner-border-sm me-2"></span>
+          }
+          Confirm Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+}

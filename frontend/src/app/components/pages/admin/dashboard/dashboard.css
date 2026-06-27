@@ -1,0 +1,222 @@
+.dashboard-section {
+  background: var(--light);
+  min-height: 100vh;
+  padding: 40px 0 60px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.page-title-inner {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--dark);
+  margin: 0;
+}
+
+.page-subtitle-inner {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Stat Cards */
+.stat-card {
+  background: white;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--border);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 80px; height: 80px;
+  border-radius: 0 20px 0 80px;
+  opacity: 0.08;
+}
+
+.stat-card.blue::before { background: var(--primary); }
+.stat-card.green::before { background: var(--success); }
+.stat-card.purple::before { background: var(--secondary); }
+.stat-card.orange::before { background: var(--warning); }
+
+.stat-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.stat-card.blue .stat-icon { background: linear-gradient(135deg, var(--primary), #38bdf8); }
+.stat-card.green .stat-icon { background: linear-gradient(135deg, var(--success), #4ade80); }
+.stat-card.purple .stat-icon { background: linear-gradient(135deg, var(--secondary), #818cf8); }
+.stat-card.orange .stat-icon { background: linear-gradient(135deg, var(--warning), #fbbf24); }
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--dark);
+  margin: 0;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.stat-link {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: none;
+  margin-top: 0.8rem;
+}
+
+.stat-link:hover { text-decoration: underline; }
+
+/* Detail Cards */
+.detail-card {
+  background: white;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--border);
+  height: 100%;
+}
+
+.detail-title {
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 2px solid var(--border);
+}
+
+/* Appointment Stats */
+.appointment-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.appt-stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.appt-stat-bar {
+  height: 8px;
+  border-radius: 4px;
+  min-width: 4px;
+  transition: width 0.8s ease;
+}
+
+.appt-stat-bar.pending { background: #f59e0b; }
+.appt-stat-bar.confirmed { background: #22c55e; }
+.appt-stat-bar.completed { background: #6366f1; }
+.appt-stat-bar.cancelled { background: #ef4444; }
+
+.appt-stat-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.appt-stat-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.pending-dot { background: #f59e0b; }
+.confirmed-dot { background: #22c55e; }
+.completed-dot { background: #6366f1; }
+.cancelled-dot { background: #ef4444; }
+
+.appt-stat-count {
+  font-weight: 700;
+  color: var(--dark);
+  font-size: 0.9rem;
+}
+
+/* Quick Actions */
+.quick-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.quick-action-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  background: var(--light);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  color: inherit;
+}
+
+.quick-action-item:hover {
+  background: rgba(14,165,233,0.05);
+  transform: translateX(4px);
+}
+
+.quick-action-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.quick-action-title {
+  font-weight: 600;
+  color: var(--dark);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.quick-action-desc {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0;
+}

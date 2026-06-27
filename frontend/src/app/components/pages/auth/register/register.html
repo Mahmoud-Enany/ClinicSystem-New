@@ -1,0 +1,164 @@
+<section class="auth-section">
+  <div class="container">
+    <div class="row justify-content-center align-items-center min-vh-screen">
+      <div class="col-md-6">
+
+        <div class="auth-card">
+
+          <!-- Header -->
+          <div class="auth-header">
+            <div class="auth-logo">
+              <i class="fas fa-user-plus"></i>
+            </div>
+            <h2 class="auth-title">Create Account</h2>
+            <p class="auth-subtitle">Join ClinicSystem and book appointments easily</p>
+          </div>
+
+          <!-- Form -->
+          <form [formGroup]="registerForm" (ngSubmit)="register()">
+
+            <!-- Role Selection -->
+            <div class="mb-4">
+              <label class="form-label fw-600">I am a...</label>
+              <div class="role-selector">
+                <div class="role-option"
+                     [class.active]="role.value === 'Patient'"
+                     (click)="selectRole('Patient')">
+                  <i class="fas fa-user"></i>
+                  <span>Patient</span>
+                </div>
+                <div class="role-option"
+                     [class.active]="role.value === 'Doctor'"
+                     (click)="selectRole('Doctor')">
+                  <i class="fas fa-user-md"></i>
+                  <span>Doctor</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Name Row -->
+            <div class="row g-3 mb-3">
+              <div class="col-6">
+                <label class="form-label fw-600">First Name</label>
+                <div class="input-group-custom">
+                  <i class="fas fa-user input-icon"></i>
+                  <input type="text"
+                         class="form-control custom-input"
+                         [class.is-invalid]="firstName.invalid && firstName.touched"
+                         formControlName="firstName"
+                         placeholder="First name">
+                </div>
+                @if (firstName.invalid && firstName.touched) {
+                  <p class="error-msg"><i class="fas fa-exclamation-circle me-1"></i>Required</p>
+                }
+              </div>
+              <div class="col-6">
+                <label class="form-label fw-600">Last Name</label>
+                <div class="input-group-custom">
+                  <i class="fas fa-user input-icon"></i>
+                  <input type="text"
+                         class="form-control custom-input"
+                         [class.is-invalid]="lastName.invalid && lastName.touched"
+                         formControlName="lastName"
+                         placeholder="Last name">
+                </div>
+                @if (lastName.invalid && lastName.touched) {
+                  <p class="error-msg"><i class="fas fa-exclamation-circle me-1"></i>Required</p>
+                }
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+              <label class="form-label fw-600">Email Address</label>
+              <div class="input-group-custom">
+                <i class="fas fa-envelope input-icon"></i>
+                <input type="email"
+                       class="form-control custom-input"
+                       [class.is-invalid]="email.invalid && email.touched"
+                       formControlName="email"
+                       placeholder="Enter your email">
+              </div>
+              @if (email.invalid && email.touched) {
+                @if (email.errors?.['required']) {
+                  <p class="error-msg"><i class="fas fa-exclamation-circle me-1"></i>Email is required</p>
+                }
+                @if (email.errors?.['email']) {
+                  <p class="error-msg"><i class="fas fa-exclamation-circle me-1"></i>Invalid email format</p>
+                }
+              }
+            </div>
+
+            <!-- Phone -->
+            <div class="mb-3">
+              <label class="form-label fw-600">Phone Number</label>
+              <div class="input-group-custom">
+                <i class="fas fa-phone input-icon"></i>
+                <input type="tel"
+                       class="form-control custom-input"
+                       [class.is-invalid]="phoneNumber.invalid && phoneNumber.touched"
+                       formControlName="phoneNumber"
+                       placeholder="01XXXXXXXXX">
+              </div>
+              @if (phoneNumber.invalid && phoneNumber.touched) {
+                <p class="error-msg"><i class="fas fa-exclamation-circle me-1"></i>Valid phone number required</p>
+              }
+            </div>
+
+            <!-- Password -->
+            <div class="mb-4">
+              <label class="form-label fw-600">Password</label>
+              <div class="input-group-custom">
+                <i class="fas fa-lock input-icon"></i>
+                <input [type]="showPassword() ? 'text' : 'password'"
+                       class="form-control custom-input"
+                       [class.is-invalid]="password.invalid && password.touched"
+                       formControlName="password"
+                       placeholder="Min 6 characters">
+                <button type="button" class="password-toggle" (click)="togglePassword()">
+                  <i [class]="showPassword() ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                </button>
+              </div>
+              @if (password.invalid && password.touched) {
+                @if (password.errors?.['required']) {
+                  <p class="error-msg"><i class="fas fa-exclamation-circle me-1"></i>Password is required</p>
+                }
+                @if (password.errors?.['minlength']) {
+                  <p class="error-msg"><i class="fas fa-exclamation-circle me-1"></i>Minimum 6 characters</p>
+                }
+              }
+            </div>
+
+            <!-- Error -->
+            @if (errorMessage()) {
+              <div class="alert-error">
+                <i class="fas fa-times-circle me-2"></i>
+                {{ errorMessage() }}
+              </div>
+            }
+
+            <!-- Submit -->
+            <button type="submit"
+                    class="btn btn-primary w-100 btn-auth"
+                    [disabled]="isLoading()">
+              @if (isLoading()) {
+                <span class="spinner-border spinner-border-sm me-2"></span>
+                Creating account...
+              } @else {
+                <i class="fas fa-user-plus me-2"></i> Create Account
+              }
+            </button>
+
+          </form>
+
+          <div class="auth-footer">
+            <p>Already have an account?
+              <a routerLink="/login" class="auth-link">Sign in here</a>
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,189 @@
+@if (isLoading()) {
+  <app-loading-spinner></app-loading-spinner>
+}
+
+<section class="appointments-section">
+  <div class="container">
+
+    <!-- Header -->
+    <div class="page-header-inner mb-4">
+      <div>
+        <h2 class="page-title-inner">My Appointments</h2>
+        <p class="page-subtitle-inner">Manage your patient appointments</p>
+      </div>
+      <div class="header-stats">
+        <div class="stat-chip pending">
+          <i class="fas fa-clock me-1"></i>
+          {{ getTabCount('pending') }} Pending
+        </div>
+        <div class="stat-chip confirmed">
+          <i class="fas fa-check me-1"></i>
+          {{ getTabCount('confirmed') }} Confirmed
+        </div>
+      </div>
+    </div>
+
+    <!-- Alerts -->
+    @if (successMessage()) {
+      <div class="alert-success-custom mb-3">
+        <i class="fas fa-check-circle me-2"></i>{{ successMessage() }}
+      </div>
+    }
+    @if (errorMessage()) {
+      <div class="alert-error-custom mb-3">
+        <i class="fas fa-times-circle me-2"></i>{{ errorMessage() }}
+      </div>
+    }
+
+    <!-- Tabs -->
+    <div class="tabs-container mb-4">
+      <button class="tab-btn" [class.active]="selectedTab() === 'all'" (click)="filterByTab('all')">
+        All <span class="tab-count">{{ getTabCount('all') }}</span>
+      </button>
+      <button class="tab-btn" [class.active]="selectedTab() === 'pending'" (click)="filterByTab('pending')">
+        Pending <span class="tab-count">{{ getTabCount('pending') }}</span>
+      </button>
+      <button class="tab-btn" [class.active]="selectedTab() === 'confirmed'" (click)="filterByTab('confirmed')">
+        Confirmed <span class="tab-count">{{ getTabCount('confirmed') }}</span>
+      </button>
+      <button class="tab-btn" [class.active]="selectedTab() === 'completed'" (click)="filterByTab('completed')">
+        Completed <span class="tab-count">{{ getTabCount('completed') }}</span>
+      </button>
+      <button class="tab-btn" [class.active]="selectedTab() === 'cancelled'" (click)="filterByTab('cancelled')">
+        Cancelled <span class="tab-count">{{ getTabCount('cancelled') }}</span>
+      </button>
+    </div>
+
+    <!-- Appointments -->
+    <div class="appointments-list">
+      @for (appointment of filteredAppointments(); track appointment.id) {
+        <div class="appointment-card">
+
+          <!-- Date Box -->
+          <div class="appointment-date-box">
+            <span class="appointment-day">{{ appointment.appointmentDate | slice:8:10 }}</span>
+            <span class="appointment-month">{{ appointment.appointmentDate | slice:5:7 }}</span>
+            <span class="appointment-year">{{ appointment.appointmentDate | slice:0:4 }}</span>
+          </div>
+
+          <!-- Info -->
+          <div class="appointment-info">
+            <span [class]="'status-badge ' + getStatusClass(appointment.status)">
+              {{ appointment.status }}
+            </span>
+            <h5 class="appointment-patient">{{ appointment.patientName }}</h5>
+            <div class="appointment-meta">
+              <span><i class="fas fa-clock me-1"></i>{{ appointment.timeSlot }}</span>
+              <span><i class="fas fa-stethoscope me-1"></i>{{ appointment.specialtyName }}</span>
+              <span><i class="fas fa-money-bill me-1"></i>EGP {{ appointment.consultationFee }}</span>
+            </div>
+            @if (appointment.notes) {
+              <p class="appointment-notes">
+                <i class="fas fa-sticky-note me-1"></i>{{ appointment.notes }}
+              </p>
+            }
+          </div>
+
+          <!-- Actions -->
+          <div class="appointment-actions">
+            @if (appointment.status === 'Pending') {
+              <button class="btn btn-success btn-sm rounded-3"
+                      (click)="updateStatus(appointment.id, 'Confirmed')"
+                      [disabled]="updatingId() === appointment.id">
+                @if (updatingId() === appointment.id) {
+                  <span class="spinner-border spinner-border-sm"></span>
+                } @else {
+                  <i class="fas fa-check me-1"></i> Confirm
+                }
+              </button>
+              <button class="btn btn-outline-danger btn-sm rounded-3"
+                      (click)="updateStatus(appointment.id, 'Cancelled')"
+                      [disabled]="updatingId() === appointment.id">
+                <i class="fas fa-times me-1"></i> Cancel
+              </button>
+            }
+            @if (appointment.status === 'Confirmed') {
+              <button class="btn btn-primary btn-sm rounded-3"
+                      (click)="openRecordModal(appointment.id)">
+                <i class="fas fa-file-medical me-1"></i> Add Record
+              </button>
+            }
+          </div>
+
+        </div>
+      }
+
+      @empty {
+        <div class="empty-state">
+          <i class="fas fa-calendar-times empty-icon"></i>
+          <h5>No appointments found</h5>
+          <p class="text-muted">No {{ selectedTab() === 'all' ? '' : selectedTab() }} appointments yet</p>
+        </div>
+      }
+    </div>
+
+  </div>
+</section>
+
+<!-- Medical Record Modal -->
+@if (showRecordModal()) {
+  <div class="modal-overlay" (click)="closeRecordModal()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <div class="modal-header-custom">
+        <h5 class="modal-title-custom">
+          <i class="fas fa-file-medical text-primary me-2"></i>
+          Add Medical Record
+        </h5>
+        <button class="modal-close" (click)="closeRecordModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body-custom">
+        <form [formGroup]="recordForm">
+
+          <div class="mb-3">
+            <label class="form-label fw-600">Diagnosis <span class="text-danger">*</span></label>
+            <textarea class="form-control custom-textarea"
+                      formControlName="diagnosis"
+                      rows="2"
+                      placeholder="Enter diagnosis..."></textarea>
+            @if (recordForm.controls['diagnosis'].invalid &&
+                 recordForm.controls['diagnosis'].touched) {
+              <p class="error-msg">Diagnosis is required</p>
+            }
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-600">Prescription</label>
+            <textarea class="form-control custom-textarea"
+                      formControlName="prescription"
+                      rows="2"
+                      placeholder="Enter prescription..."></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-600">Notes</label>
+            <textarea class="form-control custom-textarea"
+                      formControlName="notes"
+                      rows="2"
+                      placeholder="Additional notes..."></textarea>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer-custom">
+        <button class="btn btn-outline-secondary rounded-3" (click)="closeRecordModal()">
+          Cancel
+        </button>
+        <button class="btn btn-primary rounded-3"
+                (click)="saveRecord()"
+                [disabled]="isSavingRecord()">
+          @if (isSavingRecord()) {
+            <span class="spinner-border spinner-border-sm me-2"></span>
+          }
+          <i class="fas fa-save me-1"></i> Save Record
+        </button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,125 @@
+@if (isLoading()) {
+  <app-loading-spinner></app-loading-spinner>
+}
+
+<section class="records-section">
+  <div class="container">
+
+    <!-- Header -->
+    <div class="page-header-inner mb-4">
+      <div>
+        <h2 class="page-title-inner">Medical Records</h2>
+        <p class="page-subtitle-inner">Your complete medical history in one place</p>
+      </div>
+      <div class="records-count-badge">
+        <i class="fas fa-file-medical me-2"></i>
+        {{ records().length }} Records
+      </div>
+    </div>
+
+    <!-- Records -->
+    <div class="records-list">
+      @for (record of records(); track record.id) {
+        <div class="record-card" [class.expanded]="expandedRecord() === record.id">
+
+          <!-- Card Header -->
+          <div class="record-header" (click)="toggleRecord(record.id)">
+
+            <div class="record-icon">
+              <i class="fas fa-file-medical-alt"></i>
+            </div>
+
+            <div class="record-summary">
+              <div class="d-flex align-items-center gap-2 flex-wrap">
+                <h5 class="record-diagnosis">{{ record.diagnosis }}</h5>
+              </div>
+              <div class="record-meta">
+                <span>
+                  <i class="fas fa-user-md me-1 text-primary"></i>
+                  {{ record.doctorName }}
+                </span>
+                <span>
+                  <i class="fas fa-calendar me-1 text-primary"></i>
+                  {{ record.recordDate }}
+                </span>
+                <span>
+                  <i class="fas fa-calendar-check me-1 text-primary"></i>
+                  Visit: {{ record.appointmentDate }}
+                </span>
+              </div>
+            </div>
+
+            <div class="record-toggle">
+              <i [class]="expandedRecord() === record.id ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
+            </div>
+
+          </div>
+
+          <!-- Card Body -->
+          @if (expandedRecord() === record.id) 
+          {
+            <div class="record-body">
+              <div class="row g-3">
+
+                <!-- Diagnosis -->
+                <div class="col-12">
+                  <div class="record-detail-item">
+                    <div class="record-detail-icon diagnosis-icon">
+                      <i class="fas fa-stethoscope"></i>
+                    </div>
+                    <div>
+                      <p class="record-detail-label">Diagnosis</p>
+                      <p class="record-detail-value">{{ record.diagnosis }}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Prescription -->
+                @if (record.prescription) 
+                {
+                  <div class="col-md-6">
+                    <div class="record-detail-item">
+                      <div class="record-detail-icon prescription-icon">
+                        <i class="fas fa-pills"></i>
+                      </div>
+                      <div>
+                        <p class="record-detail-label">Prescription</p>
+                        <p class="record-detail-value">{{ record.prescription }}</p>
+                      </div>
+                    </div>
+                  </div>
+                }
+
+                <!-- Notes -->
+                @if (record.notes) {
+                  <div class="col-md-6">
+                    <div class="record-detail-item">
+                      <div class="record-detail-icon notes-icon">
+                        <i class="fas fa-sticky-note"></i>
+                      </div>
+                      <div>
+                        <p class="record-detail-label">Doctor's Notes</p>
+                        <p class="record-detail-value">{{ record.notes }}</p>
+                      </div>
+                    </div>
+                  </div>
+                }
+
+              </div>
+            </div>
+          }
+
+        </div>
+      }
+
+      @empty {
+        <div class="empty-state">
+          <i class="fas fa-file-medical empty-icon"></i>
+          <h5>No medical records yet</h5>
+          <p class="text-muted">Your medical records will appear here after your appointments</p>
+        </div>
+      }
+    </div>
+
+  </div>
+</section>

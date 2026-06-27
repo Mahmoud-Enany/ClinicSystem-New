@@ -1,0 +1,19 @@
+.active-link {
+  background-color: rgba(14, 165, 233, 0.1) !important;
+  color: var(--primary) !important;
+  font-weight: 600;
+}
+
+.nav-link {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  background-color: var(--light);
+  color: var(--primary);
+}
+
+.fw-500 { font-weight: 500; }
+.fw-600 { font-weight: 600; }

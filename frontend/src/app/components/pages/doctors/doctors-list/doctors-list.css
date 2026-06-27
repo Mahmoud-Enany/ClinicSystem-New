@@ -1,0 +1,234 @@
+/* Header */
+.page-header {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+  padding: 60px 0 80px;
+  text-align: center;
+  color: white;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+  font-size: 1.1rem;
+  opacity: 0.8;
+  margin-bottom: 2rem;
+}
+
+/* Search */
+.search-container {
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.search-box {
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+.search-input {
+  width: 100%;
+  height: 52px;
+  padding: 0 20px 0 48px;
+  border-radius: 14px;
+  border: none;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  outline: none;
+}
+
+.search-input:focus {
+  box-shadow: 0 4px 20px rgba(14,165,233,0.3);
+}
+
+/* Filter Card */
+.filter-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: var(--card-shadow);
+  position: sticky;
+  top: 80px;
+}
+
+.filter-title {
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 1rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 2px solid var(--border);
+}
+
+.specialty-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-btn {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.filter-btn:hover {
+  background: var(--light);
+  color: var(--primary);
+}
+
+.filter-btn.active {
+  background: rgba(14,165,233,0.1);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.filter-count {
+  margin-left: auto;
+  background: var(--light);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Results */
+.results-count {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.fw-700 { font-weight: 700; color: var(--dark); }
+
+/* Doctor Card */
+.doctor-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s ease;
+  border: 1px solid var(--border);
+  height: 100%;
+}
+
+.doctor-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+.doctor-avatar-wrap {
+  background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.doctor-avatar {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  color: white;
+}
+
+.availability-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.availability-badge.available {
+  background: rgba(34,197,94,0.1);
+  color: var(--success);
+}
+
+.availability-badge.unavailable {
+  background: rgba(239,68,68,0.1);
+  color: var(--danger);
+}
+
+.doctor-info {
+  padding: 1.2rem;
+}
+
+.doctor-name {
+  font-weight: 700;
+  color: var(--dark);
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.doctor-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.doctor-address {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin: 0.5rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.doctor-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.doctor-fee {
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 1rem;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 20px;
+  box-shadow: var(--card-shadow);
+}
+
+.empty-icon {
+  font-size: 4rem;
+  color: var(--border);
+  margin-bottom: 1rem;
+  display: block;
+}

@@ -1,0 +1,233 @@
+@if (isLoading()) {
+  <app-loading-spinner></app-loading-spinner>
+}
+
+<section class="profile-section">
+  <div class="container">
+
+    <!-- Header -->
+    <div class="profile-header">
+      <div class="profile-header-bg"></div>
+      <div class="profile-header-content">
+        <div class="profile-avatar">
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="profile-header-info">
+          <h2 class="profile-name">{{ authService.fullName() }}</h2>
+          <span class="profile-role-badge">
+            <i class="fas fa-user me-1"></i> Patient
+          </span>
+        </div>
+        <button class="btn btn-light btn-edit ms-auto"
+                (click)="toggleEdit()">
+          @if (isEditing()) {
+            <i class="fas fa-times me-2"></i> Cancel
+          } @else {
+            <i class="fas fa-edit me-2"></i> Edit Profile
+          }
+        </button>
+      </div>
+    </div>
+
+    <!-- Alerts -->
+    @if (successMessage()) {
+      <div class="alert-success-custom">
+        <i class="fas fa-check-circle me-2"></i>
+        {{ successMessage() }}
+      </div>
+    }
+    @if (errorMessage()) {
+      <div class="alert-error-custom">
+        <i class="fas fa-times-circle me-2"></i>
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <div class="row g-4 mt-1">
+
+      <!-- Left: Info Cards -->
+      <div class="col-lg-4">
+
+        <!-- Contact Info -->
+        <div class="info-card mb-4">
+          <h6 class="info-card-title">
+            <i class="fas fa-address-card me-2 text-primary"></i>
+            Contact Info
+          </h6>
+          <div class="info-list">
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="fas fa-envelope"></i>
+              </div>
+              <div>
+                <p class="info-label">Email</p>
+                <p class="info-value">{{ patient()?.email || '—' }}</p>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="fas fa-phone"></i>
+              </div>
+              <div>
+                <p class="info-label">Phone</p>
+                <p class="info-value">{{ patient()?.phoneNumber || '—' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Medical Info -->
+        <div class="info-card">
+          <h6 class="info-card-title">
+            <i class="fas fa-heartbeat me-2 text-primary"></i>
+            Medical Info
+          </h6>
+          <div class="info-list">
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="fas fa-tint"></i>
+              </div>
+              <div>
+                <p class="info-label">Blood Type</p>
+                <p class="info-value">
+                  @if (patient()?.bloodType) {
+                    <span class="blood-badge">{{ patient()!.bloodType }}</span>
+                  } @else {
+                    —
+                  }
+                </p>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="fas fa-venus-mars"></i>
+              </div>
+              <div>
+                <p class="info-label">Gender</p>
+                <p class="info-value">{{ patient()?.gender || '—' }}</p>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="fas fa-birthday-cake"></i>
+              </div>
+              <div>
+                <p class="info-label">Date of Birth</p>
+                <p class="info-value">{{ patient()?.dateOfBirth || '—' }}</p>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="fas fa-phone-alt"></i>
+              </div>
+              <div>
+                <p class="info-label">Emergency Contact</p>
+                <p class="info-value">{{ patient()?.emergencyContact || '—' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right: Edit Form -->
+      <div class="col-lg-8">
+        <div class="edit-card">
+          <h5 class="edit-card-title">
+            <i class="fas fa-user-edit me-2 text-primary"></i>
+            Profile Details
+          </h5>
+
+          <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+            <div class="row g-3">
+
+              <!-- Date of Birth -->
+              <div class="col-md-6">
+                <label class="form-label fw-600">Date of Birth</label>
+                <div class="input-group-custom">
+                  <i class="fas fa-calendar input-icon"></i>
+                  <input type="date"
+                         class="form-control custom-input"
+                         formControlName="dateOfBirth"
+                         [disabled]="!isEditing()">
+                </div>
+              </div>
+
+              <!-- Gender -->
+              <div class="col-md-6">
+                <label class="form-label fw-600">Gender</label>
+                <div class="input-group-custom">
+                  <i class="fas fa-venus-mars input-icon"></i>
+                  <select class="form-control custom-input"
+                          formControlName="gender"
+                          [disabled]="!isEditing()">
+                    <option value="">Select gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Blood Type -->
+              <div class="col-md-6">
+                <label class="form-label fw-600">Blood Type</label>
+                <div class="input-group-custom">
+                  <i class="fas fa-tint input-icon"></i>
+                  <select class="form-control custom-input"
+                          formControlName="bloodType"
+                          [disabled]="!isEditing()">
+                    <option value="">Select blood type</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Emergency Contact -->
+              <div class="col-md-6">
+                <label class="form-label fw-600">Emergency Contact</label>
+                <div class="input-group-custom">
+                  <i class="fas fa-phone-alt input-icon"></i>
+                  <input type="tel"
+                         class="form-control custom-input"
+                         formControlName="emergencyContact"
+                         placeholder="01XXXXXXXXX"
+                         [readonly]="!isEditing()">
+                </div>
+              </div>
+
+            </div>
+
+            @if (isEditing()) {
+              <div class="d-flex gap-3 mt-4">
+                <button type="submit"
+                        class="btn btn-primary px-4 rounded-3"
+                        [disabled]="isSaving()">
+                  @if (isSaving()) {
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                    Saving...
+                  } @else {
+                    <i class="fas fa-save me-2"></i> Save Changes
+                  }
+                </button>
+                <button type="button"
+                        class="btn btn-outline-secondary px-4 rounded-3"
+                        (click)="toggleEdit()">
+                  Cancel
+                </button>
+              </div>
+            }
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

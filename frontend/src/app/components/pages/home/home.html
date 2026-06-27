@@ -1,0 +1,208 @@
+@if (isLoading()) {
+  <app-loading-spinner></app-loading-spinner>
+}
+
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container">
+    <div class="row align-items-center min-vh-75">
+      <div class="col-lg-6">
+        <div class="hero-badge mb-3">
+          <i class="fas fa-shield-alt me-2"></i>
+          Trusted by 10,000+ Patients
+        </div>
+        <h1 class="hero-title">
+          Your Health, <br>
+          <span class="gradient-text">Our Priority</span>
+        </h1>
+        <p class="hero-subtitle">
+          Book appointments with Egypt's top doctors in seconds.
+          Get the care you deserve, when you need it most.
+        </p>
+        <div class="d-flex gap-3 flex-wrap">
+          <a routerLink="/doctors" class="btn btn-primary btn-lg px-4 rounded-3">
+            <i class="fas fa-search me-2"></i> Find a Doctor
+          </a>
+          <a routerLink="/register" class="btn btn-outline-primary btn-lg px-4 rounded-3">
+            <i class="fas fa-user-plus me-2"></i> Get Started
+          </a>
+        </div>
+
+        <!-- Stats -->
+        <div class="d-flex gap-4 mt-5 flex-wrap">
+          <div class="stat-item">
+            <h3 class="stat-number">500+</h3>
+            <p class="stat-label">Doctors</p>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <h3 class="stat-number">50+</h3>
+            <p class="stat-label">Specialties</p>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <h3 class="stat-number">10k+</h3>
+            <p class="stat-label">Patients</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 d-none d-lg-block">
+        <div class="hero-image-container">
+          <div class="hero-card hero-card-1">
+            <i class="fas fa-calendar-check text-success me-2"></i>
+            <span>Appointment Confirmed!</span>
+          </div>
+          <div class="hero-card hero-card-2">
+            <i class="fas fa-star text-warning me-1"></i>
+            <span>4.9 Rating</span>
+          </div>
+          <div class="hero-circle-1"></div>
+          <div class="hero-circle-2"></div>
+          <div class="hero-circle-3"></div>
+          <i class="fas fa-heartbeat hero-icon-main"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Specialties Section -->
+<section class="py-5 bg-white">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="section-title">Our Specialties</h2>
+      <p class="section-subtitle">Find the right specialist for your needs</p>
+    </div>
+
+    <div class="row g-3">
+      @for (specialty of specialties(); track specialty.id) {
+        <div class="col-6 col-md-4 col-lg-3">
+          <a [routerLink]="['/doctors']" [queryParams]="{ specialty: specialty.id }"
+             class="specialty-card text-decoration-none">
+            <div class="specialty-icon">
+              <i class="fas fa-stethoscope"></i>
+            </div>
+            <h6 class="specialty-name">{{ specialty.name }}</h6>
+            <p class="specialty-count">{{ specialty.doctorsCount }} Doctors</p>
+          </a>
+        </div>
+      }
+      @empty {
+        <div class="col-12 text-center py-4">
+          <p class="text-muted">No specialties available</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Doctors Section -->
+<section class="py-5" style="background: var(--light);">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+      <div>
+        <h2 class="section-title">Top Doctors</h2>
+        <p class="section-subtitle">Meet our experienced specialists</p>
+      </div>
+      <a routerLink="/doctors" class="btn btn-outline-primary rounded-3">
+        View All <i class="fas fa-arrow-right ms-2"></i>
+      </a>
+    </div>
+
+    <div class="row g-4">
+      @for (doctor of doctors(); track doctor.id) {
+        <div class="col-md-6 col-lg-4">
+          <div class="doctor-card">
+            <div class="doctor-avatar">
+              <i class="fas fa-user-md"></i>
+            </div>
+            <div class="doctor-info">
+              <span class="badge-specialty mb-2">{{ doctor.specialtyName }}</span>
+              <h5 class="doctor-name">{{ doctor.title }} {{ doctor.fullName }}</h5>
+              <p class="doctor-exp">
+                <i class="fas fa-briefcase-medical me-1 text-primary"></i>
+                {{ doctor.experienceYears }} Years Experience
+              </p>
+              <div class="d-flex align-items-center justify-content-between mt-3">
+                <div class="doctor-rating">
+                  <i class="fas fa-star text-warning me-1"></i>
+                  <span>{{ doctor.rating | number:'1.1-1' }}</span>
+                  <span class="text-muted ms-1">({{ doctor.ratingCount }})</span>
+                </div>
+                <span class="doctor-fee">EGP {{ doctor.consultationFee }}</span>
+              </div>
+              <a [routerLink]="['/doctors', doctor.id]"
+                 class="btn btn-primary w-100 mt-3 rounded-3">
+                Book Now <i class="fas fa-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      }
+      @empty {
+        <div class="col-12 text-center py-4">
+          <p class="text-muted">No doctors available</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section class="py-5 bg-white">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-subtitle">Book your appointment in 3 simple steps</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="step-card">
+          <div class="step-number">01</div>
+          <div class="step-icon">
+            <i class="fas fa-search"></i>
+          </div>
+          <h5 class="step-title">Find a Doctor</h5>
+          <p class="step-desc">Search by specialty or name and find the perfect doctor for your needs.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="step-card">
+          <div class="step-number">02</div>
+          <div class="step-icon">
+            <i class="fas fa-calendar-alt"></i>
+          </div>
+          <h5 class="step-title">Pick a Time</h5>
+          <p class="step-desc">Choose from available time slots that fit your schedule perfectly.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="step-card">
+          <div class="step-number">03</div>
+          <div class="step-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <h5 class="step-title">Get Confirmed</h5>
+          <p class="step-desc">Receive instant confirmation and visit your doctor stress-free.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <div class="container text-center">
+    <h2 class="cta-title">Ready to Get Started?</h2>
+    <p class="cta-subtitle">Join thousands of patients who trust ClinicSystem</p>
+    <div class="d-flex gap-3 justify-content-center flex-wrap">
+      <a routerLink="/register" class="btn btn-light btn-lg px-5 rounded-3 fw-600">
+        <i class="fas fa-user-plus me-2"></i> Create Account
+      </a>
+      <a routerLink="/doctors" class="btn btn-outline-light btn-lg px-5 rounded-3">
+        <i class="fas fa-search me-2"></i> Browse Doctors
+      </a>
+    </div>
+  </div>
+</section>

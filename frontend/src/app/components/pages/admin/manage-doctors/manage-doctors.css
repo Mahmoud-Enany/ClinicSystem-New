@@ -1,0 +1,186 @@
+.admin-section {
+  background: var(--light);
+  min-height: 100vh;
+  padding: 40px 0 60px;
+}
+
+.page-header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.page-title-inner {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--dark);
+  margin: 0;
+}
+
+.page-subtitle-inner {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.total-badge {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.alert-success-custom {
+  background: rgba(34,197,94,0.1);
+  border: 1px solid rgba(34,197,94,0.2);
+  color: #16a34a;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+}
+
+/* Search */
+.search-box {
+  position: relative;
+  max-width: 400px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+}
+
+.search-input {
+  width: 100%;
+  height: 46px;
+  padding: 0 16px 0 44px;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.2s;
+  background: white;
+}
+
+.search-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(14,165,233,0.1);
+}
+
+/* Table */
+.table-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.admin-table {
+  margin: 0;
+}
+
+.admin-table thead th {
+  background: var(--light);
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 1rem 1.2rem;
+  border: none;
+}
+
+.admin-table tbody td {
+  padding: 1rem 1.2rem;
+  border-color: var(--border);
+  vertical-align: middle;
+}
+
+.admin-table tbody tr:hover {
+  background: rgba(14,165,233,0.02);
+}
+
+.doctor-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.doctor-avatar-sm {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.doctor-name-sm {
+  font-weight: 600;
+  color: var(--dark);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.doctor-email-sm {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.fee-text {
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 0.88rem;
+}
+
+.rating-cell {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-badge.available {
+  background: rgba(34,197,94,0.1);
+  color: #16a34a;
+}
+
+.status-badge.unavailable {
+  background: rgba(239,68,68,0.1);
+  color: var(--danger);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  color: var(--border);
+  margin-bottom: 1rem;
+  display: block;
+}

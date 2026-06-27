@@ -1,0 +1,262 @@
+@if (isLoading()) {
+  <app-loading-spinner></app-loading-spinner>
+}
+
+<section class="profile-section">
+  <div class="container">
+
+    <!-- Header -->
+    <div class="profile-header">
+      <div class="profile-header-bg"></div>
+      <div class="profile-header-content">
+        <div class="profile-avatar">
+          <i class="fas fa-user-md"></i>
+        </div>
+        <div class="profile-header-info">
+          <h2 class="profile-name">{{ authService.fullName() }}</h2>
+          <span class="profile-role-badge">
+            <i class="fas fa-user-md me-1"></i> Doctor
+          </span>
+          @if (doctor()) {
+            <span class="ms-2 badge-specialty">{{ doctor()!.specialtyName }}</span>
+          }
+        </div>
+        @if (!isNewProfile()) {
+          <button class="btn btn-light btn-edit ms-auto" (click)="toggleEdit()">
+            @if (isEditing()) {
+              <i class="fas fa-times me-2"></i> Cancel
+            } @else {
+              <i class="fas fa-edit me-2"></i> Edit Profile
+            }
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- New Profile Alert -->
+    @if (isNewProfile()) {
+      <div class="new-profile-alert">
+        <i class="fas fa-info-circle me-2"></i>
+        Welcome! Please complete your doctor profile to start receiving appointments.
+      </div>
+    }
+
+    <!-- Alerts -->
+    @if (successMessage()) {
+      <div class="alert-success-custom">
+        <i class="fas fa-check-circle me-2"></i>{{ successMessage() }}
+      </div>
+    }
+    @if (errorMessage()) {
+      <div class="alert-error-custom">
+        <i class="fas fa-times-circle me-2"></i>{{ errorMessage() }}
+      </div>
+    }
+
+    <div class="row g-4 mt-1">
+
+      <!-- Left: Stats -->
+      @if (doctor()) {
+        <div class="col-lg-4">
+          <div class="info-card mb-4">
+            <h6 class="info-card-title">
+              <i class="fas fa-chart-bar me-2 text-primary"></i>
+              Quick Stats
+            </h6>
+            <div class="stats-grid">
+              <div class="stat-box">
+                <i class="fas fa-star text-warning"></i>
+                <h4>{{ doctor()!.rating }}</h4>
+                <p>Rating</p>
+              </div>
+              <div class="stat-box">
+                <i class="fas fa-users text-primary"></i>
+                <h4>{{ doctor()!.ratingCount }}</h4>
+                <p>Reviews</p>
+              </div>
+              <div class="stat-box">
+                <i class="fas fa-briefcase-medical text-success"></i>
+                <h4>{{ doctor()!.experienceYears }}+</h4>
+                <p>Yrs Exp</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <h6 class="info-card-title">
+              <i class="fas fa-address-card me-2 text-primary"></i>
+              Contact Info
+            </h6>
+            <div class="info-list">
+              <div class="info-item">
+                <div class="info-icon"><i class="fas fa-envelope"></i></div>
+                <div>
+                  <p class="info-label">Email</p>
+                  <p class="info-value">{{ doctor()!.email }}</p>
+                </div>
+              </div>
+              @if (doctor()!.phoneNumber) {
+                <div class="info-item">
+                  <div class="info-icon"><i class="fas fa-phone"></i></div>
+                  <div>
+                    <p class="info-label">Phone</p>
+                    <p class="info-value">{{ doctor()!.phoneNumber }}</p>
+                  </div>
+                </div>
+              }
+              <div class="info-item">
+                <div class="info-icon"><i class="fas fa-circle" [style.color]="doctor()!.isAvailable ? 'var(--success)' : 'var(--danger)'"></i></div>
+                <div>
+                  <p class="info-label">Status</p>
+                  <p class="info-value">{{ doctor()!.isAvailable ? 'Available' : 'Unavailable' }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Right: Form -->
+      <div [class]="doctor() ? 'col-lg-8' : 'col-12'">
+        <div class="edit-card">
+          <h5 class="edit-card-title">
+            <i class="fas fa-user-edit me-2 text-primary"></i>
+            {{ isNewProfile() ? 'Complete Your Profile' : 'Profile Details' }}
+          </h5>
+
+          <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+            <div class="row g-3">
+
+              <!-- Specialty -->
+              <div class="col-md-6">
+                <label class="form-label fw-600">Specialty</label>
+                <div class="input-group-custom">
+                  <i class="fas fa-stethoscope input-icon"></i>
+                  <select class="form-control custom-input"
+                          formControlName="specialtyId"
+                          [disabled]="!isEditing()">
+                    <option value="0">Select specialty</option>
+                    @for (specialty of specialties(); track specialty.id) {
+                      <option [value]="specialty.id">{{ specialty.name }}</option>
+                    }
+                  </select>
+                </div>
+                @if (profileForm.controls['specialtyId'].invalid &&
+                     profileForm.controls['specialtyId'].touched) {
+                  <p class="error-msg">Please select a specialty</p>
+                }
+              </div>
+
+              <!-- Title -->
+              <div class="col-md-6">
+                <label class="form-label fw-600">Title</label>
+                <div class="input-group-custom">
+                  <i class="fas fa-id-badge input-icon"></i>
+                  <select class="form-control custom-input"
+                          formControlName="title"
+                          [disabled]="!isEditing()">
+                    <option value="">Select title</option>
+                    <option value="Dr.">Dr.</option>
+                    <option value="Prof.">Prof.</option>
+                    <option value="Consultant">Consultant</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Fee -->
+              <div class="col-md-6">
+                <label class="form-label fw-600">Consultation Fee (EGP)</label>
+                <div class="input-group-custom">
+                  <i class="fas fa-money-bill input-icon"></i>
+                  <input type="number"
+                         class="form-control custom-input"
+                         formControlName="consultationFee"
+                         placeholder="e.g. 300"
+                         [readonly]="!isEditing()">
+                </div>
+              </div>
+
+              <!-- Experience -->
+              <div class="col-md-6">
+                <label class="form-label fw-600">Years of Experience</label>
+                <div class="input-group-custom">
+                  <i class="fas fa-briefcase-medical input-icon"></i>
+                  <input type="number"
+                         class="form-control custom-input"
+                         formControlName="experienceYears"
+                         placeholder="e.g. 10"
+                         [readonly]="!isEditing()">
+                </div>
+              </div>
+
+              <!-- Clinic Address -->
+              <div class="col-12">
+                <label class="form-label fw-600">Clinic Address</label>
+                <div class="input-group-custom">
+                  <i class="fas fa-map-marker-alt input-icon"></i>
+                  <input type="text"
+                         class="form-control custom-input"
+                         formControlName="clinicAddress"
+                         placeholder="e.g. 15 Tahrir St, Cairo"
+                         [readonly]="!isEditing()">
+                </div>
+              </div>
+
+              <!-- Bio -->
+              <div class="col-12">
+                <label class="form-label fw-600">Bio</label>
+                <textarea class="form-control custom-textarea"
+                          formControlName="bio"
+                          rows="3"
+                          placeholder="Tell patients about yourself..."
+                          [readonly]="!isEditing()"></textarea>
+              </div>
+
+              <!-- Available Toggle -->
+              @if (isEditing() && !isNewProfile()) {
+                <div class="col-12">
+                  <div class="toggle-item">
+                    <div>
+                      <p class="toggle-label">Available for Appointments</p>
+                      <p class="toggle-desc">Turn off to stop receiving new bookings</p>
+                    </div>
+                    <label class="toggle-switch">
+                      <input type="checkbox" formControlName="isAvailable">
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                </div>
+              }
+
+            </div>
+
+            @if (isEditing()) {
+              <div class="d-flex gap-3 mt-4">
+                <button type="submit"
+                        class="btn btn-primary px-4 rounded-3"
+                        [disabled]="isSaving()">
+                  @if (isSaving()) {
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                    Saving...
+                  } @else {
+                    <i class="fas fa-save me-2"></i>
+                    {{ isNewProfile() ? 'Create Profile' : 'Save Changes' }}
+                  }
+                </button>
+                @if (!isNewProfile()) {
+                  <button type="button"
+                          class="btn btn-outline-secondary px-4 rounded-3"
+                          (click)="toggleEdit()">
+                    Cancel
+                  </button>
+                }
+              </div>
+            }
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

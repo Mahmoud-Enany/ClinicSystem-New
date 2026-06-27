@@ -1,0 +1,99 @@
+<section class="auth-section">
+  <div class="container">
+    <div class="row justify-content-center align-items-center min-vh-screen">
+      <div class="col-md-5">
+
+        <!-- Card -->
+        <div class="auth-card">
+
+          <!-- Header -->
+          <div class="auth-header">
+            <div class="auth-logo">
+              <i class="fas fa-heartbeat"></i>
+            </div>
+            <h2 class="auth-title">Welcome Back</h2>
+            <p class="auth-subtitle">Sign in to your ClinicSystem account</p>
+          </div>
+
+          <!-- Form -->
+          <form [formGroup]="loginForm" (ngSubmit)="login()">
+
+            <!-- Email -->
+            <div class="mb-3">
+              <label class="form-label fw-600">Email Address</label>
+              <div class="input-group-custom">
+                <i class="fas fa-envelope input-icon"></i>
+                <input type="email"
+                       class="form-control custom-input"
+                       [class.is-invalid]="email.invalid && email.touched"
+                       formControlName="email"
+                       placeholder="Enter your email">
+              </div>
+              @if (email.invalid && email.touched) {
+                @if (email.errors?.['required']) {
+                  <p class="error-msg"><i class="fas fa-exclamation-circle me-1"></i>Email is required</p>
+                }
+                @if (email.errors?.['email']) {
+                  <p class="error-msg"><i class="fas fa-exclamation-circle me-1"></i>Please enter a valid email</p>
+                }
+              }
+            </div>
+
+            <!-- Password -->
+            <div class="mb-4">
+              <label class="form-label fw-600">Password</label>
+              <div class="input-group-custom">
+                <i class="fas fa-lock input-icon"></i>
+                <input [type]="showPassword() ? 'text' : 'password'"
+                       class="form-control custom-input"
+                       [class.is-invalid]="password.invalid && password.touched"
+                       formControlName="password"
+                       placeholder="Enter your password">
+                <button type="button" class="password-toggle" (click)="togglePassword()">
+                  <i [class]="showPassword() ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                </button>
+              </div>
+              @if (password.invalid && password.touched) {
+                @if (password.errors?.['required']) {
+                  <p class="error-msg"><i class="fas fa-exclamation-circle me-1"></i>Password is required</p>
+                }
+                @if (password.errors?.['minlength']) {
+                  <p class="error-msg"><i class="fas fa-exclamation-circle me-1"></i>Minimum 6 characters</p>
+                }
+              }
+            </div>
+
+            <!-- Error Message -->
+            @if (errorMessage()) {
+              <div class="alert-error">
+                <i class="fas fa-times-circle me-2"></i>
+                {{ errorMessage() }}
+              </div>
+            }
+
+            <!-- Submit -->
+            <button type="submit"
+                    class="btn btn-primary w-100 btn-auth"
+                    [disabled]="isLoading()">
+              @if (isLoading()) {
+                <span class="spinner-border spinner-border-sm me-2"></span>
+                Signing in...
+              } @else {
+                <i class="fas fa-sign-in-alt me-2"></i> Sign In
+              }
+            </button>
+
+          </form>
+
+          <!-- Footer -->
+          <div class="auth-footer">
+            <p>Don't have an account?
+              <a routerLink="/register" class="auth-link">Create one here</a>
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

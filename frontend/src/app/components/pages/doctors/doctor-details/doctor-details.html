@@ -1,0 +1,184 @@
+@if (isLoading()) 
+{
+  <app-loading-spinner></app-loading-spinner>
+}
+
+@if (doctor()) {
+  <section class="doctor-header">
+    <div class="container">
+      <div class="row align-items-center g-4">
+
+        <div class="col-auto">
+          <div class="doctor-avatar-lg">
+            <i class="fas fa-user-md"></i>
+          </div>
+        </div>
+
+        <div class="col">
+          <span class="badge-specialty-lg mb-2">{{ doctor()!.specialtyName }}</span>
+          <h1 class="doctor-name-lg">{{ doctor()!.title }} {{ doctor()!.fullName }}</h1>
+
+          <div class="d-flex flex-wrap gap-3 mt-2">
+            <span class="info-chip">
+              <i class="fas fa-briefcase-medical text-primary"></i>
+              {{ doctor()!.experienceYears }} Years Experience
+            </span>
+            <span class="info-chip">
+              <i class="fas fa-star text-warning"></i>
+              {{ doctor()!.rating | number:'1.1-1' }} Rating
+              <small class="text-muted">({{ doctor()!.ratingCount }} reviews)</small>
+            </span>
+            @if (doctor()!.clinicAddress) {
+              <span class="info-chip">
+                <i class="fas fa-map-marker-alt text-primary"></i>
+                {{ doctor()!.clinicAddress }}
+              </span>
+            }
+          </div>
+
+          <div class="d-flex align-items-center gap-2 mt-2">
+            @if (doctor()!.isAvailable) {
+              <span class="availability-badge available">
+                <i class="fas fa-circle me-1"></i> Available for Booking
+              </span>
+            } @else {
+              <span class="availability-badge unavailable">
+                <i class="fas fa-circle me-1"></i> Not Available
+              </span>
+            }
+          </div>
+        </div>
+
+        <div class="col-lg-auto">
+          <div class="booking-card">
+            <p class="booking-fee-label">Consultation Fee</p>
+            <h3 class="booking-fee">EGP {{ doctor()!.consultationFee }}</h3>
+            <button class="btn btn-primary w-100 btn-book rounded-3"
+                    [disabled]="!doctor()!.isAvailable"
+                    (click)="bookAppointment()">
+              <i class="fas fa-calendar-plus me-2"></i>
+              Book Appointment
+            </button>
+            <p class="booking-note">
+              <i class="fas fa-shield-alt me-1 text-success"></i>
+              Free cancellation
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="py-5">
+    <div class="container">
+      <div class="row g-4">
+
+        <!-- Left -->
+        <div class="col-lg-8">
+
+          @if (doctor()!.bio) {
+            <div class="detail-card mb-4">
+              <h5 class="detail-title">
+                <i class="fas fa-user-circle me-2 text-primary"></i>
+                About Doctor
+              </h5>
+              <p class="detail-text">{{ doctor()!.bio }}</p>
+            </div>
+          }
+
+          <div class="detail-card">
+            <h5 class="detail-title">
+              <i class="fas fa-address-card me-2 text-primary"></i>
+              Contact Information
+            </h5>
+            <div class="contact-grid">
+              <div class="contact-item">
+                <div class="contact-icon">
+                  <i class="fas fa-envelope"></i>
+                </div>
+                <div>
+                  <p class="contact-label">Email</p>
+                  <p class="contact-value">{{ doctor()!.email }}</p>
+                </div>
+              </div>
+              @if (doctor()!.phoneNumber) {
+                <div class="contact-item">
+                  <div class="contact-icon">
+                    <i class="fas fa-phone"></i>
+                  </div>
+                  <div>
+                    <p class="contact-label">Phone</p>
+                    <p class="contact-value">{{ doctor()!.phoneNumber }}</p>
+                  </div>
+                </div>
+              }
+              @if (doctor()!.clinicAddress) {
+                <div class="contact-item">
+                  <div class="contact-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                  </div>
+                  <div>
+                    <p class="contact-label">Clinic Address</p>
+                    <p class="contact-value">{{ doctor()!.clinicAddress }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-lg-4">
+
+          <div class="stats-card mb-4">
+            <h5 class="detail-title">
+              <i class="fas fa-chart-bar me-2 text-primary"></i>
+              Quick Stats
+            </h5>
+            <div class="stats-grid">
+              <div class="stat-box">
+                <i class="fas fa-star text-warning"></i>
+                <h4>{{ doctor()!.rating | number:'1.1-1' }}</h4>
+                <p>Rating</p>
+              </div>
+              <div class="stat-box">
+                <i class="fas fa-users text-primary"></i>
+                <h4>{{ doctor()!.ratingCount }}</h4>
+                <p>Reviews</p>
+              </div>
+              <div class="stat-box">
+                <i class="fas fa-briefcase-medical text-success"></i>
+                <h4>{{ doctor()!.experienceYears }}+</h4>
+                <p>Years Exp</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- CTA -->
+          @if (doctor()!.isAvailable) {
+            <div class="cta-card">
+              <i class="fas fa-calendar-check cta-icon"></i>
+              <h6 class="cta-title">Ready to Book?</h6>
+              <p class="cta-text">Choose your preferred time slot and confirm your appointment</p>
+              <button class="btn btn-primary w-100 rounded-3"
+                      (click)="bookAppointment()">
+                <i class="fas fa-calendar-plus me-2"></i>
+                Book Now
+              </button>
+            </div>
+          }
+
+        </div>
+      </div>
+    </div>
+  </section>
+}
+
+@if (!isLoading() && !doctor()) {
+  <div class="container py-5 text-center">
+    <i class="fas fa-user-md" style="font-size:4rem; color:var(--border);"></i>
+    <h4 class="mt-3">Doctor not found</h4>
+    <a routerLink="/doctors" class="btn btn-primary mt-3 rounded-3">Back to Doctors</a>
+  </div>
+}

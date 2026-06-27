@@ -1,0 +1,190 @@
+@if (isLoading()) {
+  <app-loading-spinner></app-loading-spinner>
+}
+
+@if (stats()) {
+<section class="dashboard-section">
+  <div class="container">
+
+    <!-- Header -->
+    <div class="dashboard-header mb-4">
+      <div>
+        <h2 class="page-title-inner">Admin Dashboard</h2>
+        <p class="page-subtitle-inner">Overview of your clinic management system</p>
+      </div>
+      <div class="d-flex gap-2 flex-wrap">
+        <a routerLink="/admin/specialties" class="btn btn-outline-primary rounded-3 btn-sm">
+          <i class="fas fa-stethoscope me-1"></i> Specialties
+        </a>
+        <a routerLink="/admin/doctors" class="btn btn-outline-primary rounded-3 btn-sm">
+          <i class="fas fa-user-md me-1"></i> Doctors
+        </a>
+        <a routerLink="/admin/patients" class="btn btn-outline-primary rounded-3 btn-sm">
+          <i class="fas fa-users me-1"></i> Patients
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Stats -->
+    <div class="row g-4 mb-4">
+      <div class="col-6 col-lg-3">
+        <div class="stat-card blue">
+          <div class="stat-icon">
+            <i class="fas fa-user-md"></i>
+          </div>
+          <div class="stat-info">
+            <h3 class="stat-number">{{ stats()!.totalDoctors }}</h3>
+            <p class="stat-label">Total Doctors</p>
+          </div>
+          <a routerLink="/admin/doctors" class="stat-link">
+            View All <i class="fas fa-arrow-right ms-1"></i>
+          </a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card green">
+          <div class="stat-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-info">
+            <h3 class="stat-number">{{ stats()!.totalPatients }}</h3>
+            <p class="stat-label">Total Patients</p>
+          </div>
+          <a routerLink="/admin/patients" class="stat-link">
+            View All <i class="fas fa-arrow-right ms-1"></i>
+          </a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card purple">
+          <div class="stat-icon">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <div class="stat-info">
+            <h3 class="stat-number">{{ stats()!.totalAppointments }}</h3>
+            <p class="stat-label">Total Appointments</p>
+          </div>
+          <a routerLink="/admin/appointments" class="stat-link">
+            View All <i class="fas fa-arrow-right ms-1"></i>
+          </a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card orange">
+          <div class="stat-icon">
+            <i class="fas fa-stethoscope"></i>
+          </div>
+          <div class="stat-info">
+            <h3 class="stat-number">{{ stats()!.totalSpecialties }}</h3>
+            <p class="stat-label">Specialties</p>
+          </div>
+          <a routerLink="/admin/specialties" class="stat-link">
+            Manage <i class="fas fa-arrow-right ms-1"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Appointment Stats -->
+    <div class="row g-4 mb-4">
+      <div class="col-lg-6">
+        <div class="detail-card">
+          <h5 class="detail-title">
+            <i class="fas fa-chart-pie me-2 text-primary"></i>
+            Appointments Overview
+          </h5>
+          <div class="appointment-stats">
+            <div class="appt-stat-item">
+              <div class="appt-stat-bar pending"
+                   [style.width.%]="(stats()!.pendingAppointments / stats()!.totalAppointments) * 100 || 0">
+              </div>
+              <div class="appt-stat-info">
+                <span class="appt-stat-label">
+                  <span class="dot pending-dot"></span> Pending
+                </span>
+                <span class="appt-stat-count">{{ stats()!.pendingAppointments }}</span>
+              </div>
+            </div>
+            <div class="appt-stat-item">
+              <div class="appt-stat-bar confirmed"
+                   [style.width.%]="(stats()!.confirmedAppointments / stats()!.totalAppointments) * 100 || 0">
+              </div>
+              <div class="appt-stat-info">
+                <span class="appt-stat-label">
+                  <span class="dot confirmed-dot"></span> Confirmed
+                </span>
+                <span class="appt-stat-count">{{ stats()!.confirmedAppointments }}</span>
+              </div>
+            </div>
+            <div class="appt-stat-item">
+              <div class="appt-stat-bar completed"
+                   [style.width.%]="(stats()!.completedAppointments / stats()!.totalAppointments) * 100 || 0">
+              </div>
+              <div class="appt-stat-info">
+                <span class="appt-stat-label">
+                  <span class="dot completed-dot"></span> Completed
+                </span>
+                <span class="appt-stat-count">{{ stats()!.completedAppointments }}</span>
+              </div>
+            </div>
+            <div class="appt-stat-item">
+              <div class="appt-stat-bar cancelled"
+                   [style.width.%]="(stats()!.cancelledAppointments / stats()!.totalAppointments) * 100 || 0">
+              </div>
+              <div class="appt-stat-info">
+                <span class="appt-stat-label">
+                  <span class="dot cancelled-dot"></span> Cancelled
+                </span>
+                <span class="appt-stat-count">{{ stats()!.cancelledAppointments }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="col-lg-6">
+        <div class="detail-card">
+          <h5 class="detail-title">
+            <i class="fas fa-bolt me-2 text-primary"></i>
+            Quick Actions
+          </h5>
+          <div class="quick-actions">
+            <a routerLink="/admin/specialties" class="quick-action-item">
+              <div class="quick-action-icon" style="background: rgba(14,165,233,0.1); color: var(--primary);">
+                <i class="fas fa-stethoscope"></i>
+              </div>
+              <div>
+                <p class="quick-action-title">Manage Specialties</p>
+                <p class="quick-action-desc">Add or edit medical specialties</p>
+              </div>
+              <i class="fas fa-chevron-right ms-auto text-muted"></i>
+            </a>
+            <a routerLink="/admin/doctors" class="quick-action-item">
+              <div class="quick-action-icon" style="background: rgba(99,102,241,0.1); color: var(--secondary);">
+                <i class="fas fa-user-md"></i>
+              </div>
+              <div>
+                <p class="quick-action-title">Manage Doctors</p>
+                <p class="quick-action-desc">View and toggle doctor availability</p>
+              </div>
+              <i class="fas fa-chevron-right ms-auto text-muted"></i>
+            </a>
+            <a routerLink="/admin/patients" class="quick-action-item">
+              <div class="quick-action-icon" style="background: rgba(34,197,94,0.1); color: var(--success);">
+                <i class="fas fa-users"></i>
+              </div>
+              <div>
+                <p class="quick-action-title">Manage Patients</p>
+                <p class="quick-action-desc">View all registered patients</p>
+              </div>
+              <i class="fas fa-chevron-right ms-auto text-muted"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+}
