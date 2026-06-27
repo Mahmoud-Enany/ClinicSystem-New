@@ -15,6 +15,6 @@ A full-stack clinic management system built with ASP.NET Core 10 and Angular 21.
 - Admin dashboard with live statistics
 
 ## Project Structure
-ClinicSystem-New/
+ClinicSystem-New
 ├── backend/   → ASP.NET Core Web API
 └── frontend/  → Angular Application
